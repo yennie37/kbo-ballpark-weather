@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './HourlyForecast.css';
+import { API_BASE } from '../utils/apiBase';
 
 const stadiumFullNames = {
   "대전": "대전한화생명볼파크",
@@ -53,9 +54,6 @@ const HourlyForecast = ({ stadiumShortName }) => {
   useEffect(() => {
     if (!stadiumName) return;
     setLoading(true);
-
-    const API_BASE = process.env.REACT_APP_API_BASE;
-    //console.log("REACT_APP_API_BASE : " + process.env.REACT_APP_API_BASE);
 
     fetch(`${API_BASE}/api/weather/forecast?stadium=${encodeURIComponent(stadiumName)}`)
       .then((res) => res.json())

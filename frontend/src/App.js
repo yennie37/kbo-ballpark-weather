@@ -9,7 +9,10 @@ function App() {
   const [selectedStadium, setSelectedStadium] = useState("대전");
 
   return (
-    <div className="App">
+    <div
+        className="App"
+        style={{ background: 'aliceblue' }}
+        >
       <h1>⚾ 야구장별 날씨 예보</h1>
 
       <div

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { API_BASE } from '../utils/apiBase';
 
 const Weather = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/weather')  // 💡 Spring Boot API 주소
+    fetch('${API_BASE}/api/weather')  // 💡 Spring Boot API 주소
       .then((res) => res.json())
       .then(setData)
       .catch((err) => console.error('날씨 데이터를 불러오는 중 오류 발생:', err));
