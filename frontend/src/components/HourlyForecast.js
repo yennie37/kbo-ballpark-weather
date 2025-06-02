@@ -42,7 +42,7 @@ const HourlyForecast = ({ stadiumShortName }) => {
     setLoading(true);
 
     const API_BASE = process.env.REACT_APP_API_BASE;
-    console.log("REACT_APP_API_BASE : " + process.env.REACT_APP_API_BASE);
+    //console.log("REACT_APP_API_BASE : " + process.env.REACT_APP_API_BASE);
 
     fetch(`${API_BASE}/api/weather/forecast?stadium=${encodeURIComponent(stadiumName)}`)
       .then((res) => res.json())
