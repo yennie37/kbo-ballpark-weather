@@ -31,6 +31,20 @@ function App() {
           </button>
         ))}
       </div>
+      
+      <div style={{ marginBottom: '16px' }}>
+        <a
+          href="https://www.weather.go.kr/w/image/vshrt/rain.do"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}
+        >
+          📡 강수 초단기 예측 바로가기
+        </a>
+        <div
+          style={{color: 'gray', fontStyle: 'italic', fontSize:'small' }}
+        >※ 정확한 초단기 예측은 위의 링크에서 확인하세요!</div>
+      </div>
 
       <HourlyForecast stadiumShortName={selectedStadium} />
     </div>
