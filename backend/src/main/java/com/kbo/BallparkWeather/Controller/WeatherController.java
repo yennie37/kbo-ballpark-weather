@@ -13,6 +13,7 @@ import jakarta.annotation.PostConstruct;
 import java.time.Instant;
 import java.util.*;
 
+@CrossOrigin(origins = "https://kbo-ballpark-weather.vercel.app")
 @RestController
 @RequestMapping("/api/weather")
 public class WeatherController {
