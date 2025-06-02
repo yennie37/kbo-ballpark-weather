@@ -3,7 +3,7 @@ import HourlyForecast from './components/HourlyForecast';
 import './App.css';
 
 // 버튼 표시용 이름
-const stadiumDisplayNames = ["대전", "대구", "광주", "인천", "잠실", "고척", "부산", "창원"];
+const stadiumDisplayNames = ["대전", "대구", "수원", "인천", "잠실", "고척", "광주", "부산", "창원"];
 
 function App() {
   const [selectedStadium, setSelectedStadium] = useState("대전");
