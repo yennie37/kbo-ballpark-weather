@@ -16,7 +16,7 @@ function App() {
         className="button-group"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '8px',
           marginBottom: '16px'
         }}
