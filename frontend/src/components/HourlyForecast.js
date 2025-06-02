@@ -15,6 +15,18 @@ const stadiumFullNames = {
   "창원": "창원NC파크"
 };
 
+const stadiumAddresses = {
+  "대전한화생명볼파크": "대전 중구 부사동 65 (부사동)",
+  "대구삼성라이온즈파크": "대구 수성구 야구전설로 1 (연호동)",
+  "광주기아챔피언스필드": "광주 북구 서림로 10 (임동)",
+  "인천SSG랜더스필드": "인천 미추홀구 매소홀로 618 (문학동)",
+  "수원KT위즈파크": "경기 수원시 장안구 경수대로 893 (조원동)",
+  "서울종합운동장 야구장": "서울 송파구 올림픽로 25 (잠실동)",
+  "고척스카이돔": "서울 구로구 경인로 430 (고척동)",
+  "부산사직구장": "부산 동래구 사직로 45 (사직동)",
+  "창원NC파크": "경남 창원시 마산회원구 삼호로 63 (양덕동)"
+};
+
 const HourlyForecast = ({ stadiumShortName }) => {
   const stadiumName = stadiumFullNames[stadiumShortName];
   const [forecast, setForecast] = useState([]);
@@ -89,6 +101,9 @@ const HourlyForecast = ({ stadiumShortName }) => {
   return (
     <div>
       <h2>🏟️ {stadiumName}</h2>
+      <p style={{ fontSize: '14px', color: 'gray', marginTop: '-8px', marginBottom: '16px' }}>
+        📍 {stadiumAddresses[stadiumName]}
+      </p>
 
       <div style={{
         display: 'grid',
