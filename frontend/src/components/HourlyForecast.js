@@ -40,7 +40,9 @@ const HourlyForecast = ({ stadiumShortName }) => {
   useEffect(() => {
     if (!stadiumName) return;
     setLoading(true);
-    fetch(`http://localhost:8080/api/weather/forecast?stadium=${encodeURIComponent(stadiumName)}`)
+    
+    const API_BASE = process.env.REACT_APP_API_BASE;
+    fetch(`${API_BASE}/api/weather/forecast?stadium=${encodeURIComponent(stadiumName)}`)
       .then((res) => res.json())
       .then((data) => {
         setForecast(data);
