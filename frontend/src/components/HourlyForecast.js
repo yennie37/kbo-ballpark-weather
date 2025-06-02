@@ -151,6 +151,7 @@ const HourlyForecast = ({ stadiumShortName }) => {
                     borderRadius: '6px',
                     backgroundColor: '#fff',
                     color: isLowPop ? '#888' : 'inherit',
+                    lineHeight: '1.6',
                   }}
                   title={`예보 시간: ${item.time}`}
                 >
