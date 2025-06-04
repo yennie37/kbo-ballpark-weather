@@ -26,3 +26,7 @@
   color: white;
   font-weight: bold;
 }
+
+.notice-sub > p {
+    margin: 0px;
+}

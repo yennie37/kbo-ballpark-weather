@@ -14,7 +14,6 @@ function App() {
         style={{ background: 'aliceblue' }}
         >
       <h1>⚾ 야구장별 날씨 예보</h1>
-
       <div
         className="button-group"
         style={{
@@ -34,7 +33,7 @@ function App() {
           </button>
         ))}
       </div>
-      
+
       <div style={{ marginBottom: '16px' }}>
         <a
           href="https://www.weather.go.kr/w/image/vshrt/rain.do"
@@ -44,9 +43,12 @@ function App() {
         >
           📡 강수 초단기 예측 바로가기
         </a>
-        <div
+        <div className="notice-sub"
           style={{color: 'gray', fontStyle: 'italic', fontSize:'small' }}
-        >※ 정확한 초단기 예측은 위의 링크에서 확인하세요!</div>
+        >
+            <p>※ 정확한 초단기 예측은 위의 링크에서 확인하세요!</p>
+            <p>※ 현 화면의 날씨는 30분에 한 번씩 새로 조회됩니다.</p>
+        </div>
       </div>
 
       <HourlyForecast stadiumShortName={selectedStadium} />
