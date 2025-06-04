@@ -109,22 +109,24 @@ const HourlyForecast = ({ stadiumShortName }) => {
         gap: '8px',
         marginBottom: '16px'
       }}>
-        {dateKeys.map((date) => (
-          <button
-            key={date}
-            onClick={() => setSelectedDate(date)}
-            style={{
-              padding: '4px 6px',
-              borderRadius: '4px',
-              border: 'none',
-              backgroundColor: selectedDate === date ? '#007bff' : '#e0e0e0',
-              color: selectedDate === date ? '#fff' : '#000',
-              cursor: 'pointer',
-              fontSize: '13px'
-            }}
-          >
-            {formatDate(date)}
-          </button>
+        {dateKeys
+          .filter(date => new Date(date) >= new Date(new Date().toISOString().substring(0, 10)))
+          .map((date) => (
+            <button
+              key={date}
+              onClick={() => setSelectedDate(date)}
+              style={{
+                padding: '4px 6px',
+                borderRadius: '4px',
+                border: 'none',
+                backgroundColor: selectedDate === date ? '#007bff' : '#e0e0e0',
+                color: selectedDate === date ? '#fff' : '#000',
+                cursor: 'pointer',
+                fontSize: '13px'
+              }}
+            >
+              {formatDate(date)}
+            </button>
         ))}
       </div>
 
