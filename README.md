@@ -15,7 +15,7 @@ KBO Ballpark Weather Application
 
 - **Frontend**: React, CSS Grid, react-swipeable, react-transition-group
 - **Backend**: Spring Boot (Java)
-- **API**: 기상청 초단기예보 API
+- **API**: [OpenWeatherMap Forecast API](https://openweathermap.org/forecast5) (3시간 단위 예보)
 - **호스팅**: Vercel (프론트), Railway (백엔드)
 - **캐싱**: localStorage 기반 클라이언트 캐싱
 
@@ -52,17 +52,29 @@ KBO Ballpark Weather Application
 ## 🧩 프로젝트 구조
 
 📦 ballpark-weather/
+
 ├── frontend/
+
 │ ├── src/
+
 │ │ ├── App.js
+
 │ │ ├── HourlyForecast.js
+
 │ │ ├── Weather.js
+
 │ │ └── utils/apiBase.js
+
 │ ├── public/index.html
+
 │ └── package.json
+
 │
+
 ├── backend/
+
 │ ├── src/main/java/.../WeatherController.java
+
 │ └── build.gradle or pom.xml
 
 ---
