@@ -56,11 +56,99 @@ const getWeatherIcon = (weatherText) => {
   }
 };
 
+// 캐시 관리 유틸리티
+const CacheManager = {
+  // 캐시 키 생성
+  getCacheKey: (stadiumName) => `weather_cache_${stadiumName}`,
+
+  // 캐시된 데이터 가져오기
+  getCache: (stadiumName) => {
+    try {
+      if (typeof localStorage === 'undefined') return null;
+
+      const cacheKey = CacheManager.getCacheKey(stadiumName);
+      const cached = localStorage.getItem(cacheKey);
+
+      if (!cached) return null;
+
+      const parsedCache = JSON.parse(cached);
+      const now = Date.now();
+      const cacheAge = now - parsedCache.timestamp;
+      const CACHE_DURATION = 30 * 60 * 1000; // 30분
+
+      // 캐시가 만료되었는지 확인
+      if (cacheAge > CACHE_DURATION) {
+        localStorage.removeItem(cacheKey);
+        return null;
+      }
+
+      console.log(`📦 캐시에서 데이터 로드: ${stadiumName} (캐시 나이: ${Math.round(cacheAge / 60000)}분)`);
+      return parsedCache.data;
+
+    } catch (error) {
+      console.error('캐시 읽기 오류:', error);
+      return null;
+    }
+  },
+
+  // 데이터를 캐시에 저장
+  setCache: (stadiumName, data) => {
+    try {
+      if (typeof localStorage === 'undefined') return;
+
+      const cacheKey = CacheManager.getCacheKey(stadiumName);
+      const cacheData = {
+        data: data,
+        timestamp: Date.now()
+      };
+
+      localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+      console.log(`💾 캐시에 데이터 저장: ${stadiumName}`);
+
+    } catch (error) {
+      console.error('캐시 저장 오류:', error);
+    }
+  },
+
+  // 특정 구장의 캐시 삭제
+  clearCache: (stadiumName) => {
+    try {
+      if (typeof localStorage === 'undefined') return;
+
+      const cacheKey = CacheManager.getCacheKey(stadiumName);
+      localStorage.removeItem(cacheKey);
+      console.log(`🗑️ 캐시 삭제: ${stadiumName}`);
+
+    } catch (error) {
+      console.error('캐시 삭제 오류:', error);
+    }
+  },
+
+  // 모든 날씨 캐시 삭제
+  clearAllCache: () => {
+    try {
+      if (typeof localStorage === 'undefined') return;
+
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('weather_cache_')) {
+          localStorage.removeItem(key);
+        }
+      });
+      console.log('🗑️ 모든 날씨 캐시 삭제 완료');
+
+    } catch (error) {
+      console.error('전체 캐시 삭제 오류:', error);
+    }
+  }
+};
+
 const HourlyForecast = ({ stadiumShortName }) => {
   const stadiumName = stadiumFullNames[stadiumShortName];
   const [forecast, setForecast] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
+  //const [cacheStatus, setCacheStatus] = useState(''); // 캐시 상태 표시용
   const nodeRef = useRef(null);
 
   const swipeHandlers = useSwipeable({
@@ -79,30 +167,66 @@ const HourlyForecast = ({ stadiumShortName }) => {
     trackMouse: true
   });
 
-  useEffect(() => {
-    if (!stadiumName) return;
+  // 캐시를 고려한 데이터 로딩
+  const loadForecastData = async (stadiumName, forceRefresh = false) => {
     setLoading(true);
+    //setCacheStatus('');
 
-    fetch(`${API_BASE}/api/weather/forecast?stadium=${encodeURIComponent(stadiumName)}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setForecast(data);
+    // 강제 새로고침이 아닌 경우 캐시 먼저 확인
+    if (!forceRefresh) {
+      const cachedData = CacheManager.getCache(stadiumName);
+      if (cachedData) {
+        setForecast(cachedData);
+        //setCacheStatus('📦 캐시된 데이터');
+        setLoading(false);
+
+        // 날짜 설정
         const today = new Date().toISOString().substring(0, 10);
         const availableDates = Array.from(
-          new Set(data.map(item => item.time.substring(0, 10)))
+          new Set(cachedData.map(item => item.time.substring(0, 10)))
         ).filter(date => new Date(date) >= new Date(today));
 
-        // 오늘 데이터가 없으면 다음 날짜 선택
         const hasToday = availableDates.includes(today);
         setSelectedDate(hasToday ? today : availableDates[0]);
 
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('❌ 시간별 날씨 로딩 실패:', err);
-        setForecast([]);
-        setLoading(false);
-      });
+        return;
+      }
+    }
+
+    // 캐시에 없거나 강제 새로고침인 경우 API 호출
+    try {
+      //setCacheStatus('🌐 서버에서 로딩 중...');
+
+      const response = await fetch(`${API_BASE}/api/weather/forecast?stadium=${encodeURIComponent(stadiumName)}`);
+      const data = await response.json();
+
+      setForecast(data);
+
+      // 새로운 데이터를 캐시에 저장
+      CacheManager.setCache(stadiumName, data);
+      //setCacheStatus('🌐 새 데이터 로드됨');
+
+      // 날짜 설정
+      const today = new Date().toISOString().substring(0, 10);
+      const availableDates = Array.from(
+        new Set(data.map(item => item.time.substring(0, 10)))
+      ).filter(date => new Date(date) >= new Date(today));
+
+      const hasToday = availableDates.includes(today);
+      setSelectedDate(hasToday ? today : availableDates[0]);
+
+    } catch (error) {
+      console.error('❌ 시간별 날씨 로딩 실패:', error);
+      setForecast([]);
+      //setCacheStatus('❌ 로딩 실패');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!stadiumName) return;
+    loadForecastData(stadiumName);
   }, [stadiumName]);
 
   if (!stadiumName) return <p>⚠️ 잘못된 구장 이름입니다.</p>;
@@ -137,7 +261,10 @@ const HourlyForecast = ({ stadiumShortName }) => {
 
   return (
     <div>
-      <h2>🏟️ {stadiumName}</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+        <h2 style={{ margin: 0 }}>🏟️ {stadiumName}</h2>
+      </div>
+
       <p style={{ fontSize: '14px', color: 'gray', marginTop: '-8px', marginBottom: '16px' }}>
         📍 {stadiumAddresses[stadiumName]}
       </p>
