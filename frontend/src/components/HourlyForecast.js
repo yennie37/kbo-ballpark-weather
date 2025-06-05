@@ -240,7 +240,9 @@ const HourlyForecast = ({ stadiumShortName }) => {
       }, {})
     : {};
 
-  const dateKeys = Object.keys(grouped).filter(date => new Date(date) >= new Date(new Date().toISOString().substring(0, 10)));
+  const dateKeys = Object.keys(grouped)
+    .filter(date => new Date(date) >= new Date(new Date().toISOString().substring(0, 10)))
+    .slice(0, 5);
   const currentData = selectedDate && grouped[selectedDate];
   const filteredData = currentData?.filter((item) => {
     const hour = parseInt(item.time.substring(11, 13), 10);
@@ -271,7 +273,7 @@ const HourlyForecast = ({ stadiumShortName }) => {
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(6, 1fr)',
+        gridTemplateColumns: 'repeat(5, 1fr)',
         gap: '8px',
         marginBottom: '16px'
       }}>
@@ -305,7 +307,7 @@ const HourlyForecast = ({ stadiumShortName }) => {
                const weatherIcon = getWeatherIcon(item.weather);
 
                const rainAmount = parseFloat(rain);
-               const isRainy = rainAmount >= 2.5;  // 경기 영향 가능: 2.5mm 이상
+               const isRainy = rainAmount >= 3.0;  // 경기 영향 가능: 3.0mm 이상
                const isHeavyRain = rainAmount >= 5.0;  // 경기 취소 우려: 5mm 이상
                const isHighPop = parseInt(pop) >= 60;
                const isLowPop = parseInt(pop) < 20;
