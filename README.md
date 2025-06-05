@@ -102,5 +102,7 @@ GET /api/weather/forecast?stadium=대전한화생명볼파크
 ---
 
 개발자 이예은 Yeeun Lee
+
 GitHub: @yennie37
+
 프로젝트 목적: KBO 팬들을 위한 실시간 날씨 확인 앱
