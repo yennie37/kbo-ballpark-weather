@@ -52,17 +52,29 @@ KBO Ballpark Weather Application
 ## 🧩 프로젝트 구조
 
 📦 ballpark-weather/
+
 ├── frontend/
+
 │ ├── src/
+
 │ │ ├── App.js
+
 │ │ ├── HourlyForecast.js
+
 │ │ ├── Weather.js
+
 │ │ └── utils/apiBase.js
+
 │ ├── public/index.html
+
 │ └── package.json
+
 │
+
 ├── backend/
+
 │ ├── src/main/java/.../WeatherController.java
+
 │ └── build.gradle or pom.xml
 
 ---
