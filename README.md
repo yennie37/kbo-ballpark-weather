@@ -74,14 +74,17 @@ KBO Ballpark Weather Application
 cd frontend
 npm install
 npm run start
+```
 
-### 1. 백엔드 (Spring Boot)
+### 2. 백엔드 (Spring Boot)
+```bash
 cd backend
 ./gradlew bootRun
+```
 
 ---
 
-API 예시
+### API 예시
 GET /api/weather/forecast?stadium=대전한화생명볼파크
 
 ---
