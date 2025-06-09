@@ -17,7 +17,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/weather")
 public class WeatherController {
-
     private final String API_KEY = "d665204a4ebad80a3bc4b2ba0d1aac5b";
 
     // 구장 이름 → 좌표
