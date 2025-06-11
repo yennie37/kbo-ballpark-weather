@@ -177,22 +177,24 @@ const HourlyForecast = ({ stadiumShortName }) => {
       const cachedData = CacheManager.getCache(stadiumName);
       if (cachedData) {
         setForecast(cachedData);
-        //setCacheStatus('📦 캐시된 데이터');
         setLoading(false);
 
-        // 날짜 설정
-        const today = new Date().toISOString().substring(0, 10);
-        const availableDates = Array.from(
-          new Set(cachedData.map(item => item.time.substring(0, 10)))
-        ).filter(date => new Date(date) >= new Date(today));
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-        const hasToday = availableDates.includes(today);
-        setSelectedDate(hasToday ? today : availableDates[0]);
+        const availableDates = Array.from(
+          new Set(cachedData.map(item => item.time.substring(0, 10))) // ✅ 수정됨
+        ).filter(dateStr => {
+          const d = new Date(dateStr + "T00:00:00");
+          return d >= today;
+        });
+
+        const hasToday = availableDates.includes(today.toISOString().substring(0, 10));
+        setSelectedDate(hasToday ? today.toISOString().substring(0, 10) : availableDates[0]);
 
         return;
       }
     }
-
     console.log("API_BASE : " + `${API_BASE}`);
 
     // 캐시에 없거나 강제 새로고침인 경우 API 호출
@@ -209,10 +211,15 @@ const HourlyForecast = ({ stadiumShortName }) => {
       //setCacheStatus('🌐 새 데이터 로드됨');
 
       // 날짜 설정
-      const today = new Date().toISOString().substring(0, 10);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // 오늘 00:00 기준
+
       const availableDates = Array.from(
         new Set(data.map(item => item.time.substring(0, 10)))
-      ).filter(date => new Date(date) >= new Date(today));
+      ).filter(dateStr => {
+        const d = new Date(dateStr + "T00:00:00");
+        return d >= today;
+      });
 
       const hasToday = availableDates.includes(today);
       setSelectedDate(hasToday ? today : availableDates[0]);
