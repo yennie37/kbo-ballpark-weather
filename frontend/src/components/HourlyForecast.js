@@ -199,6 +199,7 @@ const HourlyForecast = ({ stadiumShortName }) => {
 
       const response = await fetch(`${API_BASE}/api/weather/forecast?stadium=${encodeURIComponent(stadiumName)}`);
       const data = await response.json();
+      console.log("API_BASE : " + `${API_BASE}`);
 
       setForecast(data);
 
