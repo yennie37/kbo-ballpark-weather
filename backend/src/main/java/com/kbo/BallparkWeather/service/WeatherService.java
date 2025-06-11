@@ -40,9 +40,9 @@ public class WeatherService {
             try {
                 List<Map<String, Object>> data = callExternalApi(stadium);
                 forecastCache.put(stadium, data);
-                System.out.println("✅ " + stadium + " 날씨 갱신 완료");
+                //System.out.println("✅ " + stadium + " 날씨 갱신 완료");
             } catch (Exception e) {
-                System.err.println("❌ " + stadium + " 갱신 실패: " + e.getMessage());
+                System.err.println("❌ [FAIL] " + stadium + " 갱신 실패: " + e.getMessage());
             }
         }
     }
