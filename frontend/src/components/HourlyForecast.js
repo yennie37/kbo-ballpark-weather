@@ -148,7 +148,6 @@ const HourlyForecast = ({ stadiumShortName }) => {
   const [forecast, setForecast] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
-  //const [cacheStatus, setCacheStatus] = useState(''); // 캐시 상태 표시용
   const nodeRef = useRef(null);
 
   const swipeHandlers = useSwipeable({
@@ -170,7 +169,6 @@ const HourlyForecast = ({ stadiumShortName }) => {
   // 캐시를 고려한 데이터 로딩
   const loadForecastData = async (stadiumName, forceRefresh = false) => {
     setLoading(true);
-    //setCacheStatus('');
 
     // 강제 새로고침이 아닌 경우 캐시 먼저 확인
     if (!forceRefresh) {
@@ -195,12 +193,9 @@ const HourlyForecast = ({ stadiumShortName }) => {
         return;
       }
     }
-    console.log("API_BASE : " + `${API_BASE}`);
 
     // 캐시에 없거나 강제 새로고침인 경우 API 호출
     try {
-      //setCacheStatus('🌐 서버에서 로딩 중...');
-
       const response = await fetch(`${API_BASE}/api/weather/forecast?stadium=${encodeURIComponent(stadiumName)}`);
       const data = await response.json();
 
@@ -208,7 +203,6 @@ const HourlyForecast = ({ stadiumShortName }) => {
 
       // 새로운 데이터를 캐시에 저장
       CacheManager.setCache(stadiumName, data);
-      //setCacheStatus('🌐 새 데이터 로드됨');
 
       // 날짜 설정
       const today = new Date();
