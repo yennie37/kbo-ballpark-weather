@@ -41,7 +41,7 @@ https://api.openweathermap.org/data/2.5/forecast?lat=%.4f&lon=%.4f&units=metric&
 - 🕗 시간대별 날씨 예보 (09시 ~ 24시)
 - 🌦️ 날씨 아이콘, 온도, 상태 텍스트 표시
 - 🧭 기본 구장: 대전 한화생명 이글스 파크
-- 📲 Capacitor로 감싼 Android 앱도 제공 (파일 필요시 개발자 메일로 문의)
+- 📲 Capacitor로 감싼 Android 앱도 제공 (apk 파일 필요시 개발자 메일로 문의)
 
 ---
 
