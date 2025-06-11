@@ -193,13 +193,14 @@ const HourlyForecast = ({ stadiumShortName }) => {
       }
     }
 
+    console.log("API_BASE : " + `${API_BASE}`);
+
     // 캐시에 없거나 강제 새로고침인 경우 API 호출
     try {
       //setCacheStatus('🌐 서버에서 로딩 중...');
 
       const response = await fetch(`${API_BASE}/api/weather/forecast?stadium=${encodeURIComponent(stadiumName)}`);
       const data = await response.json();
-      console.log("API_BASE : " + `${API_BASE}`);
 
       setForecast(data);
 
