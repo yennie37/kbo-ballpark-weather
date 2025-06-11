@@ -28,9 +28,9 @@ React 기반의 웹앱이며, Capacitor를 이용해 Android 앱으로도 제작
 
 - OpenWeather API (Forecast 5 Days / 3 Hour step)
 - API 예시:
-
+```bash
 https://api.openweathermap.org/data/2.5/forecast?lat=%.4f&lon=%.4f&units=metric&appid={API_KEY}&lang=kr
-
+```
 - 구장별 위도, 경도를 활용해 시간대별 예보를 받아옴
 - 섭씨 단위(metric) + 한국어(lang=kr) 설정
 
