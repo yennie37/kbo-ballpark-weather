@@ -73,6 +73,8 @@ npx cap open android
  야구 일정/예매 정보와 연동
  iOS 빌드 (macOS 환경 필요)
 
+---
+
 ## 👩‍💻 개발자
 이예은 (Yeeun Lee)
 - 야구를 좋아하는 개발자 ⚾
