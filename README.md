@@ -1,6 +1,3 @@
-# ballpark-weather
-KBO Ballpark Weather Application
-
 # KBO Ballpark Weather ⚾🌤️
 
 KBO 리그 야구 팬들을 위한 야구장 날씨 앱입니다.  
