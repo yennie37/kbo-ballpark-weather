@@ -17,6 +17,7 @@ React 기반의 웹앱이며, Capacitor를 이용해 Android 앱으로도 제작
 - React (Create React App)
 - JavaScript
 - Capacitor (Android 앱 래핑)
+- Java + Spring Boot
 - Vercel (프론트엔드 배포)
 - GitHub + Railway (CI/CD 및 백엔드 관리)
 - OpenWeather 5-day/3-hour Forecast API (날씨 데이터)
