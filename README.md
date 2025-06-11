@@ -67,6 +67,7 @@ npx cap copy
 npx cap open android
 ```
 
+---
 ## 📌 TODO (계획 중인 기능)
  즐겨찾는 구장 저장 기능 or 현재 있는 위치 우선 출력 기능
  야구 일정/예매 정보와 연동
