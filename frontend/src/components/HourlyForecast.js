@@ -16,6 +16,19 @@ const stadiumFullNames = {
   "창원": "창원NC파크"
 };
 
+// 돔구장 목록 (향후 추가 예정인 돔구장들도 여기에 추가)
+const domeStadiums = [
+  "고척스카이돔"
+  // 향후 추가될 돔구장들:
+  // "다른돔구장이름1",
+  // "다른돔구장이름2"
+];
+
+// 돔구장 여부 확인 함수
+const isDomeStadium = (stadiumName) => {
+  return domeStadiums.includes(stadiumName);
+};
+
 const stadiumAddresses = {
   "대전한화생명볼파크": "대전 중구 부사동 65 (부사동)",
   "대구삼성라이온즈파크": "대구 수성구 야구전설로 1 (연호동)",
@@ -150,6 +163,9 @@ const HourlyForecast = ({ stadiumShortName }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const nodeRef = useRef(null);
 
+  // 현재 구장이 돔구장인지 확인
+  const isCurrentStadiumDome = isDomeStadium(stadiumName);
+
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
       setSelectedDate((prev) => {
@@ -267,11 +283,19 @@ const HourlyForecast = ({ stadiumShortName }) => {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-        <h2 style={{ margin: 0 }}>🏟️ {stadiumName}</h2>
+        <h2 style={{ margin: 0 }}>
+          🏟️ {stadiumName}
+          {isCurrentStadiumDome && <span style={{ marginLeft: '8px', fontSize: '16px' }}>🏛️</span>}
+        </h2>
       </div>
 
       <p style={{ fontSize: '14px', color: 'gray', marginTop: '-8px', marginBottom: '16px' }}>
         📍 {stadiumAddresses[stadiumName]}
+        {isCurrentStadiumDome && (
+          <span style={{ display: 'block', color: '#4caf50', fontWeight: 'bold', marginTop: '4px' }}>
+            🏛️ 돔구장 - 날씨 영향 없음
+          </span>
+        )}
       </p>
 
       <div style={{
@@ -310,19 +334,22 @@ const HourlyForecast = ({ stadiumShortName }) => {
                const weatherIcon = getWeatherIcon(item.weather);
 
                const rainAmount = parseFloat(rain);
-               const isRainy = rainAmount >= 3.0;  // 경기 영향 가능: 3.0mm 이상
-               const isHeavyRain = rainAmount >= 5.0;  // 경기 취소 우려: 5mm 이상
+               // 돔구장인 경우 강수 위험도 계산 비활성화
+               const isRainy = !isCurrentStadiumDome && rainAmount >= 3.0;  // 경기 영향 가능: 3.0mm 이상
+               const isHeavyRain = !isCurrentStadiumDome && rainAmount >= 5.0;  // 경기 취소 우려: 5mm 이상
                const isHighPop = parseInt(pop) >= 60;
                const isLowPop = parseInt(pop) < 20;
 
-               // 강수 위험도별 배경색 결정
+               // 강수 위험도별 배경색 결정 (돔구장은 항상 기본색)
                const getBackgroundColor = () => {
+                 if (isCurrentStadiumDome) return '#f8f9fa'; // 돔구장 전용 연한 회색
                  if (isHeavyRain) return '#ffebee'; // 연한 빨간색 - 경기 취소 우려
                  if (isRainy) return '#fff8e1';     // 연한 노란색 - 경기 영향 가능
                  return '#fff';                      // 기본 흰색
                };
 
                const getBorderColor = () => {
+                 if (isCurrentStadiumDome) return '#4caf50'; // 돔구장 전용 초록색 테두리
                  if (isHeavyRain) return '#f44336'; // 빨간색 테두리
                  if (isRainy) return '#ff9800';     // 주황색 테두리
                  return '#ccc';                      // 기본 회색
@@ -340,10 +367,15 @@ const HourlyForecast = ({ stadiumShortName }) => {
                      color: isLowPop ? '#888' : 'inherit',
                      lineHeight: '1.6',
                      marginBottom: '8px',
-                     boxShadow: isHeavyRain ? '0 2px 8px rgba(244, 67, 54, 0.2)' :
+                     boxShadow: isCurrentStadiumDome ? '0 2px 8px rgba(76, 175, 80, 0.1)' :
+                               isHeavyRain ? '0 2px 8px rgba(244, 67, 54, 0.2)' :
                                isRainy ? '0 2px 8px rgba(255, 152, 0, 0.2)' : 'none'
                    }}
-                   title={`예보 시간: ${item.time}${isHeavyRain ? ' - 경기 취소 우려!' : isRainy ? ' - 경기 영향 가능' : ''}`}
+                   title={`예보 시간: ${item.time}${
+                     isCurrentStadiumDome ? ' - 돔구장 (날씨 영향 없음)' :
+                     isHeavyRain ? ' - 경기 취소 우려!' :
+                     isRainy ? ' - 경기 영향 가능' : ''
+                   }`}
                  >
                    <div><strong>🕘 {hour}</strong></div>
                    <div style={{ marginTop: '4px' }}>🌡️ {item.temp.toFixed(1)}℃</div>
@@ -357,15 +389,26 @@ const HourlyForecast = ({ stadiumShortName }) => {
                      <span style={{ fontSize: '18px' }}>{weatherIcon}</span>
                      <span>{item.weather}</span>
                    </div>
-                   <div style={{ marginTop: '4px', color: isHighPop ? 'red' : isLowPop ? '#999' : 'inherit' }}>
+                   <div style={{
+                     marginTop: '4px',
+                     color: !isCurrentStadiumDome && isHighPop ? 'red' :
+                           isLowPop ? '#999' : 'inherit'
+                   }}>
                      🌧️ 강수확률: {pop}%
+                     {isCurrentStadiumDome && <span style={{ color: '#4caf50', fontSize: '12px' }}> (영향없음)</span>}
                    </div>
-                   <div style={{ marginTop: '4px', color: isLowPop ? '#999' : 'inherit' }}>
+                   <div style={{
+                     marginTop: '4px',
+                     color: isLowPop ? '#999' : 'inherit'
+                   }}>
                      💧 강수량: {rain}mm
-                     {isHeavyRain && <span style={{ color: 'red', fontWeight: 'bold' }}> 🚨 위험</span>}
-                     {isRainy && !isHeavyRain && <span style={{ color: '#ff9800', fontWeight: 'bold' }}> ⚠️ 주의</span>}
+                     {isCurrentStadiumDome && <span style={{ color: '#4caf50', fontSize: '12px' }}> (영향없음)</span>}
+                     {!isCurrentStadiumDome && isHeavyRain && <span style={{ color: 'red', fontWeight: 'bold' }}> 🚨 위험</span>}
+                     {!isCurrentStadiumDome && isRainy && !isHeavyRain && <span style={{ color: '#ff9800', fontWeight: 'bold' }}> ⚠️ 주의</span>}
                    </div>
-                   {isHeavyRain && (
+
+                   {/* 돔구장이 아닌 경우에만 경고 메시지 표시 */}
+                   {!isCurrentStadiumDome && isHeavyRain && (
                      <div style={{
                        marginTop: '6px',
                        color: '#d32f2f',
@@ -378,7 +421,7 @@ const HourlyForecast = ({ stadiumShortName }) => {
                        🚨 경기 취소/우천 중단 우려 🚨
                      </div>
                    )}
-                   {isRainy && !isHeavyRain && (
+                   {!isCurrentStadiumDome && isRainy && !isHeavyRain && (
                      <div style={{
                        marginTop: '6px',
                        color: '#f57c00',
@@ -389,6 +432,21 @@ const HourlyForecast = ({ stadiumShortName }) => {
                        textAlign: 'center'
                      }}>
                        ⚠️ 경기 영향 가능성
+                     </div>
+                   )}
+
+                   {/* 돔구장인 경우 안심 메시지 표시 */}
+                   {isCurrentStadiumDome && (rainAmount >= 3.0 || parseInt(pop) >= 60) && (
+                     <div style={{
+                       marginTop: '6px',
+                       color: '#2e7d32',
+                       fontWeight: 'bold',
+                       backgroundColor: '#e8f5e8',
+                       padding: '4px 6px',
+                       borderRadius: '4px',
+                       textAlign: 'center'
+                     }}>
+                       🏛️ 돔구장 - 경기 진행 가능
                      </div>
                    )}
                  </div>
